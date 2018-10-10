@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8"?>  
+<beans xmlns="http://www.springframework.org/schema/beans"  
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:p="http://www.springframework.org/schema/p"  
+    xmlns:context="http://www.springframework.org/schema/context"  
+    xmlns:aop="http://www.springframework.org/schema/aop"  
+    xmlns:mvc="http://www.springframework.org/schema/mvc"  
+    xsi:schemaLocation="http://www.springframework.org/schema/beans  
+                        http://www.springframework.org/schema/beans/spring-beans-3.1.xsd    
+                        http://www.springframework.org/schema/aop 
+                        http://www.springframework.org/schema/aop/spring-aop-3.1.xsd
+                        http://www.springframework.org/schema/context    
+                        http://www.springframework.org/schema/context/spring-context-3.1.xsd    
+                        http://www.springframework.org/schema/mvc    
+                        http://www.springframework.org/schema/mvc/spring-mvc-4.0.xsd">  
+                        
+    <!-- 自动扫描该包，使SpringMVC认为包下用了@controller注解的类是控制器 -->  
+    <!-- <context:component-scan base-package="com.jesse.controller" />   -->
+<!--     <bean id="compactDisc" class="com.jesse.javaconfig.soundsystem.SgtPeppers"/> -->
+    
+<!--     <bean id="compactDisc" class="com.jesse.chapter2.autoconfig.BlankDisc">
+       <constructor-arg value="Sgt. Pepper's Lonely Hearts Club Band"/>
+       <constructor-arg value="The Beatles"/>
+       <constructor-arg>
+           <list>
+               <value>1</value>
+               <value>2</value>
+               <value>3</value>
+               <value>4</value>
+           </list>
+       </constructor-arg>
+    </bean> -->
+<!--     <bean id="compactDisc" class="com.jesse.chapter2.autoconfig.BlankDisc">
+       <property name="title" value="Sgt. Pepper's Lonely Hearts Club Band"/>
+       <property name="artist" value="The Beatles"/>
+       <property name="tracks">
+           <list>
+               <value>1</value>
+               <value>2</value>
+               <value>3</value>
+               <value>4</value>
+           </list>
+       </property>
+    </bean> -->
+    
+<!--     <bean id="cdPlayer" class="com.jesse.chapter2.autoconfig.CDPlayer" >
+        <constructor-arg ref="compactDisc" />
+    </bean>
+    
+    <bean id="iceCream" class="com.jesse.chapter3.qualifier.IceCream" primary="true" /> -->
+    
+    
+<!--     <context:component-scan base-package="concert"/>
+    <aop:aspectj-autoproxy /> -->
+    
+<!--     <bean id="audience" class="com.jesse.chapter4.concert.Audience" /> -->
+    
+    <bean id="trackCounter" class="com.jesse.chapter4.concert.TrackCounter" />
+    <bean id="cd" class="com.jesse.chapter4.concert.BlankDisc" >
+      <property name="title" value="Sgt. Pepper's Lonely Hearts Club Band by The Beatles"/>
+      <property name="artist" value="The Beatles"/>
+      <property name="tracks">
+        <list>
+          <value>1</value>
+          <value>2</value>
+          <value>3</value>
+          <value>4</value>
+          <value>5</value>
+        </list>
+      </property>
+    </bean>
+    
+    <aop:config>
+      <aop:aspect ref="trackCounter">
+        <aop-before
+          pointcut-ref="trackPlayed"
+          method="countTrack"/>
+          
+        <aop:pointcut
+          id="trackPlayed"
+          expression="execution(** com.jesse.chapter4.annotation.CompactDisc.play(int)) and args(trackNumber)" />
+          
+
+          
+      </aop:aspect>
+      
+    </aop:config>
+    
+    
+    
+    
+    
+    
+    
+  <!--   <aop:config>
+      <aop:aspect ref="audience">
+        <aop:pointcut
+          id="performance"
+          expression="exectuion(** com.jesse.chapter4.concert.Performance.perform(..))" />
+      
+        <aop:before
+          pointcut-ref="performance"
+          method="silenceCellPhones" />
+          
+        <aop:before
+          pointcut-ref="performance"
+          method="takeSeats" />
+          
+        <aop:after-returning
+          pointcut-ref="performance"
+          method="applause" />
+          
+        <aop:after-throwing
+          pointcut-ref="performance"
+          method="demandRefund" />
+          
+        <aop:around
+            pointcut-ref="performance"
+            method="watchPerformance"/>  
+          
+      </aop:aspect>
+    </aop:config> -->
+    
+    
+    
+        
+        
+    
+</beans>

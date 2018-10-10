@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>  
+<beans xmlns="http://www.springframework.org/schema/beans"  
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:p="http://www.springframework.org/schema/p"  
+    xmlns:context="http://www.springframework.org/schema/context"  
+    xmlns:cache="http://www.springframework.org/schema/cache"  
+    xmlns:aop="http://www.springframework.org/schema/aop"  
+    xmlns:mvc="http://www.springframework.org/schema/mvc"  
+    xsi:schemaLocation="http://www.springframework.org/schema/beans    
+                        http://www.springframework.org/schema/beans/spring-beans-3.1.xsd    
+                        http://www.springframework.org/schema/context    
+                        http://www.springframework.org/schema/context/spring-context-3.1.xsd  
+                        http://www.springframework.org/schema/cache
+                        http://www.springframework.org/schema/cache/spring-cache-3.1.xsd  
+                        http://www.springframework.org/schema/aop
+                        http://www.springframework.org/schema/aop/spring-aop-3.1.xsd  
+                        http://www.springframework.org/schema/mvc    
+                        http://www.springframework.org/schema/mvc/spring-mvc-4.0.xsd">  
+
+    <aop:config>
+      <aop:advisor advice-ref="cacheAdvice" pointcut="execution(* com.jesse.chapter10.SpittleRepository.*(..))" />
+    </aop:config>
+    
+    <cache:advice id="cacheAdvice">
+      <cache:caching cache="spittleCache">
+        <cache:cacheable method="findRecent"/>
+        <cache:cacheable method="findOne"/>
+        <cache:cacheable method="findBySpitterId"/>
+            
+        <cache:cache-put
+            method="save"
+            key="#result.id"/>
+            
+        <cache:cache-evict method="delete"/>
+            
+      </cache:caching>
+    </cache:advice>
+    
+    <bean id="cacheManager" class="org.springframework.cache.concurrent.ConcurrentMapCacheManager" />
+    
+    <context:component-scan base-package="com.jesse.chapter10" />  
+    
+    <context:property-placeholder location="classpath:jdbc.properties"/>
+    <bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource"  
+        destroy-method="close">  
+        <property name="driverClassName" value="${jdbc.driver}" />  
+        <property name="url" value="${jdbc.url}" />  
+        <property name="username" value="${jdbc.username}" />  
+        <property name="password" value="${jdbc.password}" />  
+        <!-- 初始化连接大小 -->  
+        <property name="initialSize" value="${jdbc.initialSize}"></property>  
+        <!-- 连接池最大数量 -->  
+        <property name="maxActive" value="${jdbc.maxActive}"></property>  
+        <!-- 连接池最大空闲 -->  
+        <property name="maxIdle" value="${jdbc.maxIdle}"></property>  
+        <!-- 连接池最小空闲 -->  
+        <property name="minIdle" value="${jdbc.minIdle}"></property>  
+        <!-- 获取连接最大等待时间 -->  
+        <property name="maxWait" value="${jdbc.maxWait}"></property>  
+        <property name="testOnBorrow" value="${common.db.testOnBorrow}"></property>  
+    </bean>  
+  
+    <bean id="jdbcTemplate" class="org.springframework.jdbc.core.JdbcTemplate">  
+        <property name="dataSource" ref="dataSource" />  
+    </bean>  
+    
+    <bean id="spitterRepository" class="com.jesse.chapter10.JdbcSpitterRepository">  
+        <constructor-arg ref="jdbcTemplate" />  
+    </bean>  
+    
+    <bean id="spittleRepository" class="com.jesse.chapter10.JdbcSpittleRepository">  
+        <constructor-arg ref="jdbcTemplate" />  
+    </bean>  
+  
+</beans>
